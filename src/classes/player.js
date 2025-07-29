@@ -1,4 +1,8 @@
-import { INITIAL_FRAMES_COUNTER, PATH_ENGINE_IMAGE, PATH_ENGINE_SPRITES_IMAGE, PATH_SPACESHIP_IMAGE } from "../utils/constants.js";
+import { INITIAL_FRAMES_COUNTER,
+    PATH_ENGINE_IMAGE,
+    PATH_ENGINE_SPRITES_IMAGE,
+    PATH_SPACESHIP_IMAGE 
+} from "../utils/constants.js";
 
 class Player {
 
