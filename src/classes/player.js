@@ -1,8 +1,11 @@
-import { INITIAL_FRAMES_COUNTER,
+import {
+    INITIAL_FRAMES_COUNTER,
     PATH_ENGINE_IMAGE,
     PATH_ENGINE_SPRITES_IMAGE,
-    PATH_SPACESHIP_IMAGE 
+    PATH_SPACESHIP_IMAGE
 } from "../utils/constants.js";
+
+import Projectile from "./Projectile.js";
 
 class Player {
 
@@ -20,7 +23,7 @@ class Player {
         this.image = this.getImage(PATH_SPACESHIP_IMAGE);
         this.engineImage = this.getImage(PATH_ENGINE_IMAGE);
         this.engineSprites = this.getImage(PATH_ENGINE_SPRITES_IMAGE);
-        
+
         this.sx = 0;
         this.framesCounter = INITIAL_FRAMES_COUNTER;
     }
@@ -43,7 +46,7 @@ class Player {
     draw(ctx) {
         ctx.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
 
-        ctx.drawImage(this.engineSprites, this.sx, 0, 48, 48, this.position.x, this.position.y + 10, this.width, this.height   );
+        ctx.drawImage(this.engineSprites, this.sx, 0, 48, 48, this.position.x, this.position.y + 10, this.width, this.height);
 
         ctx.drawImage(this.engineImage, this.position.x, this.position.y + 8, this.width, this.height);
 
@@ -52,15 +55,27 @@ class Player {
 
     update() {
 
-        if(this.framesCounter === 0) {
+        if (this.framesCounter === 0) {
             this.sx = this.sx == 96 ? 0 : this.sx + 48;
             this.framesCounter = INITIAL_FRAMES_COUNTER;
 
         }
 
         this.framesCounter--;
+    }
 
+    shoot(projectiles) {
+        const p = new Projectile(
+            {
+                x: this.position.x + this.width / 2 - 1,
+                y: this.position.y + 2,
+            },
+            -10
+        );
+
+        projectiles.push(p);
     }
 }
+2;
 
 export default Player;
