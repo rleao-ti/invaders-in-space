@@ -15,6 +15,7 @@ const player = new Player(canvas.width, canvas.height);
 const grid = new Grid(3, 6);
 
 const playerProjectiles = [];
+const invadersProjectiles = [];
 
 const keys = {
     left: false,
@@ -26,7 +27,10 @@ const keys = {
 };
 
 const drawProjectiles = () => {
-    playerProjectiles.forEach((projectile) => {
+
+    const projectiles = [...playerProjectiles, ...invadersProjectiles];
+
+    projectiles.forEach((projectile) => {
         projectile.draw(ctx);
         projectile.update();
     });
@@ -40,11 +44,24 @@ const clearProjectiles = () => {
     })
 };
 
+    const checkShootInvaders = () => {
+        grid.invaders.forEach((invader, invaderIndex) => {
+            playerProjectiles.some((projectile, projectileIndex) => {
+                if (invader.hit(projectile)) {
+                    grid.invaders.splice(invaderIndex, 1);
+                    playerProjectiles.splice(projectileIndex, 1);
+                }
+            });
+        });
+    };
+
+
 const gameLoop = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawProjectiles();
     clearProjectiles();
+    checkShootInvaders();
 
     grid.draw(ctx);
     grid.update();
@@ -102,5 +119,12 @@ const gameLoop = () => {
 
         }
 });
+
+setInterval(() => {
+    const invader = grid.getRandomInvader();
+    if (invader) {
+        invader.shoot(invadersProjectiles);
+    }
+}, 1000);
 
     gameLoop();

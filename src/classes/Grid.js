@@ -52,6 +52,8 @@ class Grid {
 
             if(this.moveDown){
                 invader.moveDown();
+                invader.incrementVelocity(0.1);
+                this.invadersVelocity = invader.velocity;
             }
 
             if (this.direction === "right") {
@@ -66,7 +68,7 @@ class Grid {
 
     reachedRightBoundary () {
         return this.invaders.some(
-            (invader) => invader.position.x >= 1320
+            (invader) => invader.position.x + invader.width >= innerWidth
         );
     }
 
@@ -74,6 +76,11 @@ class Grid {
         return this.invaders.some(
             (invader) => invader.position.x <= 0
         );
+    }
+
+    getRandomInvader () {
+        const index = Math.floor(Math.random() * this.invaders.length);
+        return this.invaders[index];
     }
 
 }
