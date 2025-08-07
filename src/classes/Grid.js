@@ -5,7 +5,7 @@ class Grid {
         this.rows = rows;
         this.cols = cols;
 
-        this.direction = "right"; // or "left"
+        this.direction = "right";
         this.moveDown = "false";
 
         this.invadersVelocity = 1;
@@ -38,7 +38,7 @@ class Grid {
         });
     }
 
-    update() {
+    update(playerStatus) {
         if (this.reachedRightBoundary()) {
             this.direction = "left";
             this.moveDown = true;
@@ -47,6 +47,9 @@ class Grid {
             this.direction = "right";
             this.moveDown = true;
         }
+
+        if (!playerStatus) this.moveDown = false;
+
 
         this.invaders.forEach((invader) => {
 
@@ -81,6 +84,11 @@ class Grid {
     getRandomInvader () {
         const index = Math.floor(Math.random() * this.invaders.length);
         return this.invaders[index];
+    }
+
+    restart() {
+        this.invaders = this.init();
+        this.direction = "right";
     }
 
 }
