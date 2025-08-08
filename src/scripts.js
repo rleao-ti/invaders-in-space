@@ -4,6 +4,7 @@ import Particle from "./classes/Particle.js";
 import Player from "./classes/player.js";
 import Projectile from "./classes/Projectile.js";
 import { GameState } from "./utils/constants.js";
+import Obstacle from "./classes/Obstacle.js";
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -26,11 +27,18 @@ const obstacles = [];
 const initObstacles = () => {
     const x = canvas.width / 2 - 50;
     const y = canvas.height - 250;
+    const offset = canvas.width * 0.15;
     const color = "crimson";
 
-    const obstacle1 = new Obstacle({ x, y }, 100, 20, color);
+    const obstacle1 = new Obstacle({ x: x - offset, y }, 100, 20, "crimson");
+    const obstacle2 = new Obstacle({ x: x + offset, y }, 100, 20, "crimson");
+
+
     obstacles.push(obstacle1);
+    obstacles.push(obstacle2);
 };
+
+initObstacles();
 
 const keys = {
     left: false,
@@ -44,8 +52,6 @@ const keys = {
     const drawObstacles = () => {
         obstacles.forEach((obstacle) => obstacle.draw(ctx));
     };
-
-
 
 const drawProjectiles = () => {
 
@@ -106,6 +112,22 @@ const checkShootPlayer = () => {
             invadersProjectiles.splice(i, 1);
             gameOver();
         }
+    });
+};
+
+const checkShootObstacles = () => {
+    obstacles.forEach((obstacle) => {
+        playerProjectiles.some((projectile, i) => {
+            if (obstacle.hit(projectile)) {
+                playerProjectiles.splice(i, 1);
+            }
+        });
+
+        invadersProjectiles.some((projectile, i) => {
+            if (obstacle.hit(projectile)) {
+                invadersProjectiles.splice(i, 1);
+            }
+        });
     });
 };
 
@@ -185,9 +207,10 @@ const gameLoop = () => {
 
         checkShootInvaders();
         checkShootPlayer();
+        checkShootObstacles();
 
         grid.draw(ctx);
-        // grid.update(player.alive);
+        grid.update(player.alive);
 
         ctx.save();
 
@@ -222,8 +245,11 @@ const gameLoop = () => {
     }
 
     if (currentState === GameState.GAME_OVER) {
+
+        checkShootObstacles
         drawParticles();
         drawProjectiles();
+        drawObstacles();
 
         clearProjectiles();
         clearParticles();
@@ -254,11 +280,11 @@ addEventListener("keyup", (event) => {
     }
 });
 
-// setInterval(() => {
-//     const invader = grid.getRandomInvader();
-//     if (invader) {
-//         invader.shoot(invadersProjectiles);
-//     }
-// }, 1000);
+setInterval(() => {
+    const invader = grid.getRandomInvader();
+    if (invader) {
+        invader.shoot(invadersProjectiles);
+    }
+}, 1000);
 
 gameLoop();
